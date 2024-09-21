@@ -1,0 +1,19 @@
+{
+  "name": "formula-interpreter",
+  "version": "1.0.0",
+  "description": "A lightweight JavaScript library for parsing and evaluating mathematical and logical expressions. This package acts as a formula interpreter, allowing users to input complex formulas as strings and compute their results. It supports basic arithmetic operations, conditional expressions, and custom functions, making it ideal for applications like spreadsheets, calculators, and data-driven applications that require dynamic formula evaluation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krish-edgenroot/formula-interpreter.git"
+  },
+  "author": "Krishna Dubey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krish-edgenroot/formula-interpreter/issues"
+  },
+  "homepage": "https://github.com/krish-edgenroot/formula-interpreter#readme"
+}
