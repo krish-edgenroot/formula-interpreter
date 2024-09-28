@@ -1,8 +1,7 @@
-/**
- * @param {string} evalString
- * @param {any} args 
- */
-exports.interpret = (evalString,...args) => {
+interface Interpretor{
+    (evalString:string,...args:any):any
+}
+const interpret: Interpretor = (evalString,...args) => {
     args = args.map(ele=>{
         if(typeof ele == "object"){
             return JSON.stringify(ele)
@@ -15,3 +14,5 @@ exports.interpret = (evalString,...args) => {
     let evalParser = eval(`(${evalString})`)
     return eval(`evalParser(${args.toString()})`);
 }
+
+module.exports = interpret;
