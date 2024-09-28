@@ -1,7 +1,7 @@
 // concatStr.ts
-import { ConcatStr } from './String';
+import { Concatstr } from './String';
 
 // Implement the function with the interface type
-export const concatStr: ConcatStr = (joinByStr, ...args) => {
-  return args.join(joinByStr);
+export const CONCATSTR: Concatstr = (...args) => {
+  return args.join('');
 };

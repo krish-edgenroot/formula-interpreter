@@ -1,3 +1,3 @@
-export interface ConcatStr{
-    (joinByStr:string,...args:string[]):string
+export interface Concatstr{
+    (...args:string[]):string
 }
