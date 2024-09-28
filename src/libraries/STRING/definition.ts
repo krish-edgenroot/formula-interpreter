@@ -9,5 +9,15 @@ module.exports={
             }
         ],
         "return": "string | object"
-    }
+    },
+    "STRLENGTH": {
+        "params": [
+            {
+                "name": "str",
+                "type": "string",
+                "required": true
+            }
+        ],
+        "return": "number"
+    },
 }

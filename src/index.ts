@@ -9,7 +9,6 @@ export const interpretor: Interpretor = (evalString,libraries,payload) => {
         if(requiredLibraries) requiredLibraries+=";"
         let externalArgs = Object.keys(payload||{})?.join(",");
         evalString = `(${externalArgs|| ""})=>{${requiredLibraries || ""} ${evalString}}`
-        console.log("eval",evalString)
         let values = Object.values(payload||{}).map(ele=>{
             if(typeof ele == "object"){
                 return JSON.stringify(ele)
