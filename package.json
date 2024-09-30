@@ -1,6 +1,6 @@
 {
   "name": "formula-interpreter",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "A lightweight JavaScript library for parsing and evaluating mathematical and logical expressions. This package acts as a formula interpreter, allowing users to input complex formulas as strings and compute their results. It supports basic arithmetic operations, conditional expressions, and custom functions, making it ideal for applications like spreadsheets, calculators, and data-driven applications that require dynamic formula evaluation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,8 +10,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc",
-    "dev": "ts-node app.ts",
+    "build": "tsc && node functionParser.js --src=dist",
+    "dev": "node functionParser.js && ts-node app.ts",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

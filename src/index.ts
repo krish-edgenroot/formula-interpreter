@@ -1,10 +1,27 @@
 const fs = require("fs");
+const path = require("path");
 
-interface Interpretor{
-    (evalString:string,libraries?:Array<string>|null,payload?:object):any
+function functionParser(evalString:string, libraries:string[]|undefined|null){
+    if(libraries){
+        let funcs = require(path.join(__dirname,"/funcMapping.json"));
+        libraries.forEach((lib:string)=>{  
+            for (const key in funcs[lib]) {
+                let rgx = new RegExp(key,'g');
+                evalString = evalString.replace(rgx,funcs[lib][key]);
+            }
+        })
+    }
+    return evalString;
 }
-export const interpretor: Interpretor = (evalString,libraries,payload) => {
+
+function cleanEvalString(evalString:string){
+    let requireRegx = /(const|let|var)\s+(\w+)\s*=\s*require\s*\(\s*['"`]([^'"`]+)['"`]\s*\)\s*;?/g;
+    return evalString.replace(requireRegx,"");
+}
+
+export function interpretor(evalString:string,libraries?:Array<string>|null,payload?:object):any{
     try{
+        evalString = cleanEvalString(evalString);
         let requiredLibraries = libraries?.map(ele=>`const ${ele} = require(__dirname+"/libraries/${ele}/index")`).join(";\n");
         if(requiredLibraries) requiredLibraries+=";"
         let externalArgs = Object.keys(payload||{})?.join(",");
@@ -18,6 +35,7 @@ export const interpretor: Interpretor = (evalString,libraries,payload) => {
             }
             return ele
     })
+    evalString = functionParser(evalString,libraries);
     let evalParser = eval(`(${evalString})`)
     return eval(`evalParser(${values?.toString()})`);
     }catch(err:any){
@@ -25,7 +43,7 @@ export const interpretor: Interpretor = (evalString,libraries,payload) => {
     }
 }
 
-export const showLibAndProperties = (library?:string,propertyName?:string)=>{
+export function showLibAndProperties (library?:string,propertyName?:string) {
     if(library){
         try{
             let functions = require(__dirname+"/libraries/"+library+"/definition");
