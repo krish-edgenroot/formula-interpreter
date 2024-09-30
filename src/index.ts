@@ -37,9 +37,9 @@ export function interpretor(evalString:string,libraries?:Array<string>|null,payl
     })
     evalString = functionParser(evalString,libraries);
     let evalParser = eval(`(${evalString})`)
-    return eval(`evalParser(${values?.toString()})`);
+    return {status:1, result:eval(`evalParser(${values?.toString()})`)};
     }catch(err:any){
-        console.log("Error:",err?.message)
+        return {status:0,error:err?.message}
     }
 }
 
@@ -51,14 +51,14 @@ export function showLibAndProperties (library?:string,propertyName?:string) {
                 if(functions.hasOwnProperty(propertyName))
                     return functions[propertyName];
                 else
-                    throw Error("Error: Property not found")
+                    throw Error("LibProperty: Property not found")
             }
             else{    
                 functions = Object.keys(functions)
-                return functions;
+                return {status:1,data:functions};
             }
         }catch(err:any){
-            console.log(err);
+            return {status:0,error:err};
         }
     }
     else{
