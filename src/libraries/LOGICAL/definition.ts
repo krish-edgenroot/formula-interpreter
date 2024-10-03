@@ -23,7 +23,7 @@ module.exports={
         "params": [
             {
                 "name": "...args",
-                "type": "...args",
+                "type": "any",
                 "min":1,
                 "required": true
             },
@@ -34,7 +34,7 @@ module.exports={
         "params": [
             {
                 "name": "...args",
-                "type": "...args",
+                "type": "any",
                 "min":1,
                 "required": true
             },

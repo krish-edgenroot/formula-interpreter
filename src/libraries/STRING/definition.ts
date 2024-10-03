@@ -2,13 +2,13 @@ module.exports={
     "CONCATSTR": {
         "params": [
             {
-                "name": "args",
-                "type": "...args",
+                "name": "...args",
+                "type": "string",
                 "min":1,
                 "required": true
             }
         ],
-        "return": "string | object"
+        "return": "string"
     },
     "STRLENGTH": {
         "params": [
