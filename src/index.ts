@@ -43,7 +43,7 @@ export function interpretor(evalString:string,libraries?:Array<string>|null,payl
     }
 }
 
-export function showLibAndProperties (library?:string,propertyName?:string) {
+export function showLibAndProperties (library?:string|null,propertyName?:string|null,allAtOnce?:boolean) {
     if(library){
         try{
             let functions = require(__dirname+"/libraries/"+library+"/definition");
@@ -63,6 +63,13 @@ export function showLibAndProperties (library?:string,propertyName?:string) {
     }
     else{
         let libraries = fs.readdirSync(__dirname+"/libraries");
-        return libraries;
+        let mapping:any = {};
+        if(allAtOnce){
+            libraries = libraries.map((library:string)=>{
+                let functions = require(__dirname+"/libraries/"+library+"/definition");
+                mapping[library] = functions;
+            });
+        }
+        return mapping || libraries;
     }
 }
