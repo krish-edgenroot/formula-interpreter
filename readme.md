@@ -24,7 +24,7 @@ This function evaluates a given JavaScript string by optionally loading and util
 
 - **`evalString`**: A string containing the JavaScript code to evaluate.
 - **`libraries`**: An array of library names to load from the `libraries` directory.
-- **`payload`**: An object containing values to pass into the evaluated code.
+- **`EXTERNAL_VAR`**: An object containing values to pass into the evaluated code.
 
 #### Example:
 
@@ -32,6 +32,12 @@ This function evaluates a given JavaScript string by optionally loading and util
 const evalString = "return 1+1";
 const result = interpretor(evalString);
 console.log(result); //output: 2
+```
+Usage of external variable.
+```javascript
+const evalString = "return EXTERNAL_VAR.name.length"; // You can use external variables by EXTERNAL_VAR keyword.
+const result = interpretor(evalString,[],{name:"Krishna"});
+console.log(result); //output: 7
 ```
 
 ### `showLibAndProperties(library, propertyName, allAtOnce)`
