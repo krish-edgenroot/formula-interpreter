@@ -1,50 +1,39 @@
 const fs = require("fs");
-const path = require("path");
+const {fork} = require("child_process");
 
-function functionParser(
-  evalString: string,
-  libraries: string[] | undefined | null
-) {
-  if (libraries) {
-    let funcs = require(path.join(__dirname, "/funcMapping.json"));
-    libraries.forEach((lib: string) => {
-      for (const key in funcs[lib]) {
-        let rgx = new RegExp(key, "g");
-        evalString = evalString.replace(rgx, funcs[lib][key]);
-      }
+
+function waitForChildMessage(child: any,timeOutID: any): Promise<any> {
+    return new Promise((resolve) => {
+        child.on('message', (result:any) => {
+            clearTimeout(timeOutID)
+            resolve(result);
+        });
     });
-  }
-  return evalString;
-}
-
-function cleanEvalString(evalString: string) {
-  let requireRegx =
-    /(const|let|var)\s+(\w+)\s*=\s*require\s*\(\s*['"`]([^'"`]+)['"`]\s*\)\s*;?/g;
-  return evalString.replace(requireRegx, "");
 }
 
 export function interpretor(
   evalString: string,
   libraries?: Array<string> | null,
-  EXTERNAL_VAR?: object
-): any {
-  try {
-    evalString = cleanEvalString(evalString);
-    let requiredLibraries = libraries
-      ?.map(
-        (ele) => `const ${ele} = require(__dirname+"/libraries/${ele}/index")`
-      )
-      .join(";\n");
-    if (requiredLibraries) requiredLibraries += ";";
-    evalString = `(EXTERNAL_VAR)=>{${
-      requiredLibraries || ""
-    } ${evalString}}`;
-    evalString = functionParser(evalString, libraries);
-    let evalParser = eval(`(${evalString})`);
-    return { status: 1, result: eval(`evalParser(EXTERNAL_VAR)`) };
-  } catch (err: any) {
-    return { status: 0, error: err?.message };
-  }
+  EXTERNAL_VAR?: object| null,
+  options?: { timeout: number }
+): Promise<any> {
+  return new Promise((resolve) => {
+    const child = fork(__dirname + '/evalJob.ts', [evalString, libraries, JSON.stringify(EXTERNAL_VAR)]);
+
+    const timeOutID = setTimeout(() => {
+      child.kill('SIGTERM'); // Terminate the child process
+      throw Error("Timeout reached");
+    }, options?.timeout||2000);
+
+    // Listen for a message from the child process
+    child.on('message', (data: any) => {
+      clearTimeout(timeOutID); // Clear the timeout
+      if(data?.status === 0) {
+        throw Error(data?.error);
+      }
+      resolve(data);           // Resolve the promise with the result
+    });
+  });
 }
 
 export function showLibAndProperties(
