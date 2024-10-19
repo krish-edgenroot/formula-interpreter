@@ -18,7 +18,11 @@ export function interpretor(
   options?: { timeout: number }
 ): Promise<any> {
   return new Promise((resolve) => {
-    const child = fork(__dirname + '/evalJob.ts', [evalString, libraries, JSON.stringify(EXTERNAL_VAR)]);
+    let fileList = fs.readdirSync(__dirname);
+    let fileName = {
+      "evalJob":fileList.includes("evalJob.ts")?"evalJob.ts":"evalJob.js"
+    }
+    const child = fork(__dirname+"/" + fileName.evalJob, [evalString, libraries, JSON.stringify(EXTERNAL_VAR)]);
 
     const timeOutID = setTimeout(() => {
       child.kill('SIGTERM'); // Terminate the child process
