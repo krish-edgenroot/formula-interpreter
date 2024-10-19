@@ -40,8 +40,17 @@ let EXTERNAL_VAR = nonValueArgs.includes(process.argv[4])?{}:JSON.parse(process.
       evalString = functionParser(evalString, libraries);
       let evalParser = eval(`(${evalString})`);
       let resp = eval(`evalParser(EXTERNAL_VAR)`) ;
-      process.send(resp);
+      process.send({status:1,data:resp});
     } catch (err: any) {
-        process.send({ status: 0, error: err.message });
+      const errorLine = err?.stack?.match(/<anonymous>:(\d+):(\d+)/)[0]?.split(":");
+      if(errorLine){
+        let errorString= evalString.split("\n");
+        let errorContext = errorString[errorLine[1]-1];
+        process.send({
+                status: 0,
+                error: err.message,
+                highlight: `>> ${errorContext}`, // Show error with pointer
+          });
+      }
     }
   }
