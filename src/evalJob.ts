@@ -42,8 +42,9 @@ let EXTERNAL_VAR = nonValueArgs.includes(process.argv[4])?{}:JSON.parse(process.
       let resp = eval(`evalParser(EXTERNAL_VAR)`) ;
       process.send({status:1,data:resp});
     } catch (err: any) {
-      const errorLine = err?.stack?.match(/<anonymous>:(\d+):(\d+)/)[0]?.split(":");
+      let errorLine = err?.stack?.match(/<anonymous>:(\d+):(\d+)/) 
       if(errorLine){
+        errorLine = errorLine[0]?.split(":");
         let errorString= evalString.split("\n");
         let errorContext = errorString[errorLine[1]-1];
         process.send({
@@ -51,6 +52,11 @@ let EXTERNAL_VAR = nonValueArgs.includes(process.argv[4])?{}:JSON.parse(process.
                 error: err.message,
                 highlight: `>> ${errorContext}`, // Show error with pointer
           });
+      }else{
+        process.send({
+          status: 0,
+          error: err.message,
+    });
       }
     }
   }
