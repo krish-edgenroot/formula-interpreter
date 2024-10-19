@@ -22,15 +22,14 @@ export function interpretor(
 
     const timeOutID = setTimeout(() => {
       child.kill('SIGTERM'); // Terminate the child process
-      throw Error("Timeout reached");
+      resolve({
+        status: 0,
+        error: 'Timed out',})
     }, options?.timeout||2000);
 
     // Listen for a message from the child process
     child.on('message', (data: any) => {
       clearTimeout(timeOutID); // Clear the timeout
-      if(data?.status === 0) {
-        throw Error(data?.error);
-      }
       resolve(data);           // Resolve the promise with the result
     });
   });
