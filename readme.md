@@ -2,6 +2,50 @@
 
 This Node.js project provides a flexible interpreter for evaluating JavaScript strings. It supports dynamic function parsing and can load external libraries based on user-specified configurations. The project is particularly useful for executing JavaScript code snippets with customized logic.
 
+
+### Real-Life Example: Dynamic Formula Evaluation
+
+Consider a financial reporting application that relies on a table of formulas to calculate various metrics. These formulas are subject to change based on business needs, often every 6-7 days. Using the Node.js Interpreter, the application can easily adapt to these changes without requiring extensive reprogramming.
+
+#### Scenario
+
+- **Formula Table**:
+    | Day         | Metric         | Formula                     |
+    |-------------|----------------|-----------------------------|
+    | Day 1      | Total Revenue   | `SUM(sales) + BONUS`       |
+    | Day 7      | Total Revenue   | `SUM(sales) * 1.1`         |
+    | Day 14     | Total Revenue   | `SUM(sales) - EXPENSES`     |
+    | Day 21     | Total Revenue   | `SUM(sales) / 1.2`         |
+    | Day 28     | Total Revenue   | `SUM(sales) + TAX`         |
+
+- **How It Works**:
+    Each time the formula changes, the financial reporting application can call the `interpretor` function to evaluate the new formula based on the current data.
+
+#### Example Implementations
+
+1. **Initial Formula (Day 1)**:
+   For the initial formula, the application uses an `add` formula with sales data:
+javascript
+   const evalString = "return SUM(sales) + BONUS;";
+   const result = interpretor(evalString, [], { sales: [100, 200, 300], BONUS: 50 });
+   console.log(result); // Output: 650
+
+
+## Table of Contents
+- [Node.js Interpreter](#nodejs-interpreter)
+- [Features](#features)
+- [Installation](#installation)
+- [Project Overview](#project-overview)
+- [Usage](#usage)
+  - [interpretor](#1-interpretor)
+  - [showLibAndProperties](#2-showlibandproperties)
+- [Libraries](#libraries)
+  - [LOGICAL](#logical)
+  - [STRING](#string)
+- [Contributing](#contributing)
+- [License](#license)
+
+
 ## Features
 
 - **Library Loader**: Loads required libraries dynamically to extend the functionality.
@@ -39,7 +83,7 @@ const result = interpretor(evalString);
 console.log(result); // Output: 2
 
 ```
-### `showLibAndProperties(library, propertyName, allAtOnce)`
+### 2. `showLibAndProperties(library, propertyName, allAtOnce)`
 
 This function retrieves the available libraries and their properties, allowing users to inspect the functionalities that can be utilized in their JavaScript evaluations.
 
@@ -92,3 +136,18 @@ This library provides functions for manipulating strings.
 ---
 
 This table provides a clear overview of the functions available in the `STRING` library, along with their purpose, parameters, and usage examples.
+
+
+## Keywords
+
+- Node.js
+- JavaScript
+- Interpreter
+- Formula Interpreter
+- Dynamic Evaluation
+- Formula Evaluation
+- Logical Operations
+- String Manipulation
+- Custom Functions
+- Dynamic Formulas
+
