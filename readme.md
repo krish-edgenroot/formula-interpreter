@@ -25,7 +25,8 @@ Consider a financial reporting application that relies on a table of formulas to
 
 1. **Initial Formula (Day 1)**:
    For the initial formula, the application uses an `add` formula with sales data:
-javascript
+
+   ```javascript
    const evalString = "return SUM(sales) + BONUS;";
    const result = interpretor(evalString, [], { sales: [100, 200, 300], BONUS: 50 });
    console.log(result); // Output: 650
@@ -119,6 +120,8 @@ This library provides functions for evaluating logical conditions and expression
 | `IF(condition, trueValue, falseValue)` | Evaluates a condition and returns either `trueValue` or `falseValue` based on the condition. | `condition`, `trueValue`, `falseValue` | `return IF(1 < 2, 'Yes', 'No')` → Output: Yes         |
 | `AND(...args)`                | Evaluates multiple boolean expressions. Returns `true` if all conditions are true. | `...args`                               | `return AND(1 === 1, 2 === 2)` → Output: true         |
 | `OR(...args)`                 | Evaluates multiple boolean expressions. Returns `true` if any condition is true. | `...args`                               | `return OR(1 === 2, 2 === 2)` → Output: true          |
+| `XOR(...args)`                | Evaluates multiple boolean expressions. Returns `true` if an odd number of conditions are true. | `...args`                               | `return XOR(true, false, true)` → Output: true        |
+
 
 ---
 
@@ -136,6 +139,18 @@ This library provides functions for manipulating strings.
 ---
 
 This table provides a clear overview of the functions available in the `STRING` library, along with their purpose, parameters, and usage examples.
+
+
+# Math Functions
+
+This library provides functions for performing mathematical operations.
+
+| Function                    | Description                                               | Parameters                        | Example                                                     |
+|-----------------------------|-----------------------------------------------------------|-----------------------------------|-------------------------------------------------------------|
+| `SUM(...numbers)`           | Returns the sum of all given numbers.                     | `...numbers`                      | `return SUM(1, 2, 3, 4);` → Output: 10                     |
+| `ROUND(number, numDigits)`  | Rounds the given number to the specified number of digits. | `number`, `numDigits`            | `return ROUND(3.14159, 2);` → Output: 3.14                 |
+
+
 
 
 ## Keywords
