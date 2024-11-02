@@ -7,3 +7,7 @@ export interface And {
 export interface Or {
     (...args: any): boolean
 }
+
+export interface Xor {
+    (...args: any): boolean;
+}

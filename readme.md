@@ -2,6 +2,51 @@
 
 This Node.js project provides a flexible interpreter for evaluating JavaScript strings. It supports dynamic function parsing and can load external libraries based on user-specified configurations. The project is particularly useful for executing JavaScript code snippets with customized logic.
 
+
+### Real-Life Example: Dynamic Formula Evaluation
+
+Consider a financial reporting application that relies on a table of formulas to calculate various metrics. These formulas are subject to change based on business needs, often every 6-7 days. Using the Node.js Interpreter, the application can easily adapt to these changes without requiring extensive reprogramming.
+
+#### Scenario
+
+- **Formula Table**:
+    | Day         | Metric         | Formula                     |
+    |-------------|----------------|-----------------------------|
+    | Day 1      | Total Revenue   | `SUM(sales) + BONUS`       |
+    | Day 7      | Total Revenue   | `SUM(sales) * 1.1`         |
+    | Day 14     | Total Revenue   | `SUM(sales) - EXPENSES`     |
+    | Day 21     | Total Revenue   | `SUM(sales) / 1.2`         |
+    | Day 28     | Total Revenue   | `SUM(sales) + TAX`         |
+
+- **How It Works**:
+    Each time the formula changes, the financial reporting application can call the `interpretor` function to evaluate the new formula based on the current data.
+
+#### Example Implementations
+
+1. **Initial Formula (Day 1)**:
+   For the initial formula, the application uses an `add` formula with sales data:
+
+   ```javascript
+   const evalString = "return SUM(sales) + BONUS;";
+   const result = interpretor(evalString, [], { sales: [100, 200, 300], BONUS: 50 });
+   console.log(result); // Output: 650
+
+
+## Table of Contents
+- [Node.js Interpreter](#nodejs-interpreter)
+- [Features](#features)
+- [Installation](#installation)
+- [Project Overview](#project-overview)
+- [Usage](#usage)
+  - [interpretor](#1-interpretor)
+  - [showLibAndProperties](#2-showlibandproperties)
+- [Libraries](#libraries)
+  - [LOGICAL](#logical)
+  - [STRING](#string)
+- [Contributing](#contributing)
+- [License](#license)
+
+
 ## Features
 
 - **Library Loader**: Loads required libraries dynamically to extend the functionality.
@@ -14,41 +59,46 @@ This Node.js project provides a flexible interpreter for evaluating JavaScript s
 npm i formula-interpreter
 ```
 
+
+# Project Overview
+
+This project exposes functionalities to evaluate JavaScript code dynamically and allows users to manipulate data through a set of predefined libraries. It is designed to enable users who may not be proficient in JavaScript to still leverage its capabilities through simple function calls.
+
 ## Usage
 
 The project exposes two primary functions:
 
-### `interpretor(evalString, libraries, payload)`
+### 1. `interpretor(evalString, libraries, payload)`
 
-This function evaluates a given JavaScript string by optionally loading and utilizing libraries. The `payload` object is used to pass arguments into the evaluated string.
-
-- **`evalString`**: A string containing the JavaScript code to evaluate.
-- **`libraries`**: An array of library names to load from the `libraries` directory.
-- **`EXTERNAL_VAR`**: An object containing values to pass into the evaluated code.
+| Parameter     | Type           | Description                                                  |
+|---------------|----------------|--------------------------------------------------------------|
+| `evalString`  | `string`       | A string containing the JavaScript code to evaluate.       |
+| `libraries`   | `array`        | An array of library names to load from the `libraries` directory. |
+| `EXTERNAL_VAR`| `object`       | An object containing values to pass into the evaluated code. |
 
 #### Example:
 
 ```javascript
-const evalString = "return 1+1";
+const evalString = "return 1 + 1";
 const result = interpretor(evalString);
-console.log(result); //output: 2
+console.log(result); // Output: 2
+
 ```
-Usage of external variable.
-```javascript
-const evalString = "return EXTERNAL_VAR.name.length"; // You can use external variables by EXTERNAL_VAR keyword.
-const result = interpretor(evalString,[],{name:"Krishna"});
-console.log(result); //output: 7
-```
+### 2. `showLibAndProperties(library, propertyName, allAtOnce)`
 
-### `showLibAndProperties(library, propertyName, allAtOnce)`
+This function retrieves the available libraries and their properties, allowing users to inspect the functionalities that can be utilized in their JavaScript evaluations.
 
-This function retrieves the available libraries and their properties.
+#### Parameters:
 
-- **`library`**: The name of the library to load.
-- **`propertyName`**: The specific property or function within the library to retrieve.
-- **`allAtOnce`**: A boolean flag to load all libraries and their properties at once.
+| Parameter       | Type     | Description                                                  |
+|-----------------|----------|--------------------------------------------------------------|
+| `library`       | `string` | The name of the library to load. If `null`, all libraries are loaded. |
+| `propertyName`  | `string` | The specific property or function within the library to retrieve. If `null`, all properties will be retrieved. |
+| `allAtOnce`     | `boolean`| A flag indicating whether to load all libraries and their properties at once. If `true`, all libraries will be included in the response. |
 
-#### Example:
+#### Example Usage:
+
+1. **Retrieving a Specific Property:**
 
 For specific response.
 ```javascript
@@ -63,87 +113,56 @@ const libraryInfo = showLibAndProperties(null, null, true);
 
 # LIBRARIES
 
-This module provides libraries so you don't need to know JavaScript code, you can use them easily. Below are the libraries available in the package.
+This library provides functions for evaluating logical conditions and expressions.
 
-## LOGICAL
+| Function                       | Description                                                               | Parameters                               | Example                                                 |
+|--------------------------------|---------------------------------------------------------------------------|------------------------------------------|---------------------------------------------------------|
+| `IF(condition, trueValue, falseValue)` | Evaluates a condition and returns either `trueValue` or `falseValue` based on the condition. | `condition`, `trueValue`, `falseValue` | `return IF(1 < 2, 'Yes', 'No')` → Output: Yes         |
+| `AND(...args)`                | Evaluates multiple boolean expressions. Returns `true` if all conditions are true. | `...args`                               | `return AND(1 === 1, 2 === 2)` → Output: true         |
+| `OR(...args)`                 | Evaluates multiple boolean expressions. Returns `true` if any condition is true. | `...args`                               | `return OR(1 === 2, 2 === 2)` → Output: true          |
+| `XOR(...args)`                | Evaluates multiple boolean expressions. Returns `true` if an odd number of conditions are true. | `...args`                               | `return XOR(true, false, true)` → Output: true        |
 
-### `IF(condition, trueValue, falseValue)`
 
-Evaluates the given `condition` and returns either `trueValue` if the condition is true, or `falseValue` if the condition is false.
+---
 
-#### Parameters:
-- **`condition`**: A boolean condition to evaluate.
-- **`trueValue`**: The value to return if the condition is `true`.
-- **`falseValue`**: The value to return if the condition is `false`.
-
-### Example
-```javascript
-const evalString = "return IF(1 < 2, 'Yes', 'No')";
-const result = interpretor(evalString, ['LOGICAL'], {});
-console.log(result); // Output: Yes
-```
-
-### `AND(...args)`
-
-Evaluates multiple boolean expressions and returns `true` if all conditions are true.
-
-#### Parameters:
-- **`...args`**: A variable number of boolean expressions.
-
-### Example
-```javascript
-const andEvalString = "return AND(1 === 1, 2 === 2)";
-const andResult = interpretor(andEvalString, ['LOGICAL'], {});
-console.log(andResult); // Output: true
-```
-
-### `OR(...args)`
-
-Evaluates multiple boolean expressions and returns `true` if any condition is true.
-
-#### Parameters:
-- **`...args`**: A variable number of boolean expressions.
-
-#### Example:
-
-```javascript
-const orEvalString = "return OR(1 === 2, 2 === 2)";
-const orResult = interpretor(orEvalString, ['LOGICAL'], {});
-console.log(orResult); // Output: true
-```
+This table provides a clear overview of the functions available in the `LOGICAL` library, along with their purpose, parameters, and usage examples.
 
 # STRING 
 
-This module provides libraries that allow you to manipulate strings without needing to know JavaScript code; you can use them easily. Below are the libraries available in the package.
+This library provides functions for manipulating strings.
 
-## Functions
+| Function                    | Description                                         | Parameters          | Example                                                |
+|-----------------------------|-----------------------------------------------------|---------------------|--------------------------------------------------------|
+| `CONCATSTR(...args)`        | Concatenates multiple strings into a single string. | `...args`           | `return CONCATSTR('Hello, ', 'world!', ' How are you?');` → Output: Hello, world! How are you? |
+| `STRLENGTH(str)`            | Returns the length of the given string.             | `str`               | `return STRLENGTH('Hello, world!');` → Output: 13    |
 
-### `CONCATSTR(...args)`
+---
 
-Concatenates multiple strings into a single string.
+This table provides a clear overview of the functions available in the `STRING` library, along with their purpose, parameters, and usage examples.
 
-#### Parameters:
-- **`...args`**: A variable number of strings to concatenate.
 
-#### Example:
+# Math Functions
 
-```javascript
-const evalString = "return CONCATSTR('Hello, ', 'world!', ' How are you?');";
-const result = interpretor(evalString, ['STRING']);
-console.log(result); // Output: Hello, World! How are you? 
-```
+This library provides functions for performing mathematical operations.
 
-### `STRLENGTH(str)`
+| Function                    | Description                                               | Parameters                        | Example                                                     |
+|-----------------------------|-----------------------------------------------------------|-----------------------------------|-------------------------------------------------------------|
+| `SUM(...numbers)`           | Returns the sum of all given numbers.                     | `...numbers`                      | `return SUM(1, 2, 3, 4);` → Output: 10                     |
+| `ROUND(number, numDigits)`  | Rounds the given number to the specified number of digits. | `number`, `numDigits`            | `return ROUND(3.14159, 2);` → Output: 3.14                 |
 
-Returns the length of the given string.
 
-#### Parameters:
-- **`str`**: The string whose length is to be calculated.
 
-#### Example:
 
-```javascript
-const evalString = "return STRLENGTH('Hello, world!');";
-const result = interpretor(evalString, ['STRING']);
-console.log(result); // Output: 13
-```
+## Keywords
+
+- Node.js
+- JavaScript
+- Interpreter
+- Formula Interpreter
+- Dynamic Evaluation
+- Formula Evaluation
+- Logical Operations
+- String Manipulation
+- Custom Functions
+- Dynamic Formulas
+

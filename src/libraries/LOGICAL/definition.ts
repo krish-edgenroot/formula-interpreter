@@ -41,4 +41,15 @@ module.exports={
         ],
         "return": "boolean"
     },
+    "XOR": {
+        "params": [
+            {
+                "name": "...args",
+                "type": "any",
+                "min": 1,
+                "required": true
+            }
+        ],
+        "return": "boolean"
+    }
 }
