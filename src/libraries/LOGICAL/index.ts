@@ -10,3 +10,11 @@ export const AND: Logical.And = (...args)=>{
 export const OR: Logical.Or = (...args)=>{
     return eval(args.join(' || '))
 }
+
+export const XOR: Logical.Xor = (...args) => {
+    const trueCount = args.map(Boolean).filter(val => val).length;
+    return trueCount % 2 === 1;
+
+  
+    
+ }

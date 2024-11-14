@@ -8,7 +8,7 @@ export const CONCATSTR: String.Concatstr = (...args) => {
 
 export const STRLENGTH: String.strlength = (str) => {
   if(typeof str !== 'string') {
-    throw new Error('STRLENGTH: Argument must be a string');
+    throw new Error(`STRLENGTH: Argument must be a string, but getting "${str}"`);
   }
   return str.length;
 };
