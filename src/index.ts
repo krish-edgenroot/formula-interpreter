@@ -71,8 +71,9 @@ export function showLibAndProperties(
           library +
           "/definition");
         mapping[library] = functions;
+        return mapping
       });
     }
-    return mapping || libraries;
+    return libraries;
   }
 }

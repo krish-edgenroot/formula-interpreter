@@ -113,6 +113,8 @@ const libraryInfo = showLibAndProperties(null, null, true);
 
 # LIBRARIES
 
+# LOGICAL
+
 This library provides functions for evaluating logical conditions and expressions.
 
 | Function                       | Description                                                               | Parameters                               | Example                                                 |
@@ -153,16 +155,4 @@ This library provides functions for performing mathematical operations.
 
 
 
-## Keywords
-
-- Node.js
-- JavaScript
-- Interpreter
-- Formula Interpreter
-- Dynamic Evaluation
-- Formula Evaluation
-- Logical Operations
-- String Manipulation
-- Custom Functions
-- Dynamic Formulas
 

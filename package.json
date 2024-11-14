@@ -9,7 +9,12 @@
     "parser",
     "evaluator",
     "math",
-    "logical"
+    "logical",
+    "Dynamic Formulas",
+    "Custom Functions",
+    "Node.js",
+    "JavaScript"
+
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
