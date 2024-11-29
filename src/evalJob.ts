@@ -25,7 +25,7 @@ function cleanEvalString(evalString: string) {
 }
 
 // Handle command line arguments
-let nonValueArgs = ["undefined", "null", "[]", "{}"];
+let nonValueArgs = ["undefined", "null", "[]", "{}",""];
 let evalString = process.argv[2];
 let libraries = nonValueArgs.includes(process.argv[3]) ? [] : process.argv[3].split(",");
 let EXTERNAL_VAR = nonValueArgs.includes(process.argv[4]) ? {} : JSON.parse(process.argv[4]);
