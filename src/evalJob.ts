@@ -24,6 +24,15 @@ function cleanEvalString(evalString: string) {
   return evalString.replace(requireRegx, "");
 }
 
+function parseExternalVar  (EXTERNAL_VAR: any)  {
+  for (const key in EXTERNAL_VAR) {
+    if (typeof EXTERNAL_VAR[key] === "object" && EXTERNAL_VAR[key].hasOwnProperty("type") && EXTERNAL_VAR[key].type === "FUNCTION") {
+      EXTERNAL_VAR[key] = eval(EXTERNAL_VAR[key].value);
+    }
+  }
+  return EXTERNAL_VAR;
+};
+
 // Handle command line arguments
 let nonValueArgs = ["undefined", "null", "[]", "{}",""];
 let evalString = process.argv[2];
@@ -42,6 +51,7 @@ if (process.send) {
     evalString = `(EXTERNAL_VAR) => { ${requiredLibraries || ""} ${evalString} }`;
     evalString = functionParser(evalString, libraries);
     let evalParser = eval(`(${evalString})`);
+    EXTERNAL_VAR = parseExternalVar(EXTERNAL_VAR);
     let resp = evalParser(EXTERNAL_VAR);
     process.send({ status: 1, data: resp });
   } catch (err: any) {

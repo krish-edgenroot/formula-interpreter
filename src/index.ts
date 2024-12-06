@@ -14,13 +14,20 @@ function waitForChildMessage(child: any,timeOutID: any): Promise<any> {
 export function interpretor(
   evalString: string,
   libraries?: Array<string> | null,
-  EXTERNAL_VAR?: object| null,
+  EXTERNAL_VAR?: {[key:string]:any}| null,
   options?: { timeout: number }
 ): Promise<any> {
   return new Promise((resolve) => {
     let fileList = fs.readdirSync(__dirname);
     let fileName = {
       "evalJob":fileList.includes("evalJob.ts")?"evalJob.ts":"evalJob.js"
+    }
+    if(EXTERNAL_VAR){
+      for(let key in EXTERNAL_VAR){
+        if(typeof EXTERNAL_VAR[key] ==="function"){
+          EXTERNAL_VAR[key] = {type:"FUNCTION",value:"("+EXTERNAL_VAR[key].toString()+")"};
+        }
+      }
     }
     const child = fork(__dirname+"/" + fileName.evalJob, [evalString, libraries, JSON.stringify(EXTERNAL_VAR)]);
 
