@@ -1,16 +1,6 @@
 const fs = require("fs");
 const {fork} = require("child_process");
 
-
-function waitForChildMessage(child: any,timeOutID: any): Promise<any> {
-    return new Promise((resolve) => {
-        child.on('message', (result:any) => {
-            clearTimeout(timeOutID)
-            resolve(result);
-        });
-    });
-}
-
 export function interpretor(
   evalString: string,
   libraries?: Array<string> | null,
@@ -36,7 +26,7 @@ export function interpretor(
       resolve({
         status: 0,
         error: 'Timed out',})
-    }, options?.timeout||2000);
+    }, options?.timeout||5000);
 
     // Listen for a message from the child process
     child.on('message', (data: any) => {
