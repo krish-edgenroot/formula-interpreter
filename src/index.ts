@@ -62,14 +62,14 @@ export function showLibAndProperties(
     let libraries = fs.readdirSync(__dirname + "/libraries");
     let mapping: any = {};
     if (allAtOnce) {
-      libraries = libraries.map((library: string) => {
+      libraries.forEach((library: string) => {
         let functions = require(__dirname +
           "/libraries/" +
           library +
           "/definition");
         mapping[library] = functions;
-        return mapping
       });
+      libraries = mapping;
     }
     return libraries;
   }
