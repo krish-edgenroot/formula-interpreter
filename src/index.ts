@@ -19,8 +19,15 @@ export function interpretor(
         }
       }
     }
-    const child = fork(__dirname+"/" + fileName.evalJob, [evalString, libraries, JSON.stringify(EXTERNAL_VAR)]);
+    const child = fork(__dirname+"/" + fileName.evalJob);
 
+    let largeData = {
+      evalString:evalString||"return null", 
+      libraries:libraries||[], 
+      EXTERNAL_VAR: EXTERNAL_VAR||{}
+    }
+
+    child.send(largeData);
     const timeOutID = setTimeout(() => {
       child.kill('SIGTERM'); // Terminate the child process
       resolve({

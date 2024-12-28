@@ -43,13 +43,11 @@ function parseExternalVar  (EXTERNAL_VAR: any)  {
   return EXTERNAL_VAR;
 };
 
-// Handle command line arguments
-let nonValueArgs = ["undefined", "null", "[]", "{}",""];
-let evalString = process.argv[2];
-let libraries = nonValueArgs.includes(process.argv[3]) ? [] : process.argv[3].split(",");
-let EXTERNAL_VAR = nonValueArgs.includes(process.argv[4]) ? {} : JSON.parse(process.argv[4]);
-
-if (process.send) {
+process.on('message', (data:any) => {
+let evalString = data.evalString;
+let libraries = data.libraries;
+let EXTERNAL_VAR = data.EXTERNAL_VAR;
+if (process.send) {   
   try {
     evalString = cleanEvalString(evalString);
     let requiredLibraries = libraries
@@ -64,6 +62,7 @@ if (process.send) {
     EXTERNAL_VAR = parseExternalVar(EXTERNAL_VAR);
     let resp = evalParser(EXTERNAL_VAR);
     process.send({ status: 1, data: resp });
+    process.exit(0);
   } catch (err: any) {
     let errorLine = err?.stack?.match(/<anonymous>:(\d+):(\d+)/g);
     if (errorLine) {
@@ -75,12 +74,14 @@ if (process.send) {
         error: err.message,
         highlight: `>> ${errorContext}`, 
       });
+      process.exit(1);
     } else {
       process.send({
         status: 0,
         error: err.message,
       });
+      process.exit(1);
     }
   }
 }
-
+});
