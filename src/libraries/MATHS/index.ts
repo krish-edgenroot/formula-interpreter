@@ -15,3 +15,7 @@ export const ROUND: Maths.Round = (number: number, numDigits: number) => {
     return Math.round(number * factor) / factor;
 }
 
+export const INT: Maths.Int = (number: number) => {
+    return Math.trunc(number);
+};
+
