@@ -34,7 +34,7 @@ function parseExternalVar  (EXTERNAL_VAR: any)  {
     if (typeof EXTERNAL_VAR[key] === "object" && EXTERNAL_VAR[key].hasOwnProperty("type") && EXTERNAL_VAR[key].type === "FUNCTION") {
       funcsArr.forEach(func=>{
         if(func!==key){
-          EXTERNAL_VAR[key].value = EXTERNAL_VAR[key].value.replace(`${func}(`,`EXTERNAL_VAR.${func}(`);
+          EXTERNAL_VAR[key].value = EXTERNAL_VAR[key].value.replace(new RegExp(`${func}\\(`,'g'),`EXTERNAL_VAR.${func}(`);
         }
       })
       EXTERNAL_VAR[key] = eval(EXTERNAL_VAR[key].value);
