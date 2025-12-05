@@ -43,6 +43,17 @@ function parseExternalVar  (EXTERNAL_VAR: any)  {
   return EXTERNAL_VAR;
 };
 
+process.on('disconnect', () => process.exit(1));
+process.on('SIGTERM', () => process.exit(1));
+process.on('uncaughtException', err => {
+  if (process.send) process.send({ status: 0, error: err.message });
+  process.exit(1);
+});
+process.on('unhandledRejection', (err:any) => {
+  if (process.send) process.send({ status: 0, error: err.message });
+  process.exit(1);
+});
+
 process.on('message', (data:any) => {
 let evalString = data.evalString;
 let libraries = data.libraries;
