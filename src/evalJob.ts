@@ -56,14 +56,28 @@ function extractCalculations(expression: string, EXTERNAL_VAR: any) {
 
 
   // 1️⃣ Extract all EXTERNAL_VAR.CODE properties used
-  const varMatches = [...expression.matchAll(/EXTERNAL_VAR\.CODE\.([a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*)/g)];
-  const uniqueVars = [...new Set(varMatches.map(m => m[1]))];
+  // const varMatches = [...expression.matchAll(/EXTERNAL_VAR\.CODE\.([a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*)/g)];
+  // const uniqueVars = [...new Set(varMatches.map(m => m[1]))];
+
+
+  const varMatches = [...expression.matchAll(
+    /EXTERNAL_VAR\.CODE\.([a-zA-Z0-9_]+(?:\??\.[a-zA-Z0-9_]+)*)/g
+  )];
+  let uniqueVars = [...new Set(
+    varMatches.map(m => m[1].replace(/\?\./g, '.'))
+  )];
+
 
   uniqueVars.forEach(key => {
     // const value = EXTERNAL_VAR.CODE[key];
     const value = getNestedValue(EXTERNAL_VAR.CODE, key);
+    const displayValue =
+      typeof value === "object"
+        ? JSON.stringify(value)
+        : value;
 
-    steps.push(`${key} = ${value}`);
+    steps.push(`${key} = ${displayValue}`);
+    // steps.push(`${key} = ${value}`);
     context[key] = value; // save in context for later calculations
   });
   // 2️⃣ Handle variable declarations
