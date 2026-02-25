@@ -113,9 +113,27 @@ function extractCalculations(expression: string, EXTERNAL_VAR: any) {
       returnExpr = returnExpr.slice(0, -1).trim();
     }
 
-    const func = new Function("EXTERNAL_VAR", "context", `with(context) { return ${returnExpr}; }`);
-    const finalValue = func(EXTERNAL_VAR, context);
-    steps.push(`return ${returnExpr} = ${finalValue}`);
+      returnExpr = returnExpr.replace(
+  /EXTERNAL_VAR\.CODE\??\.([a-zA-Z0-9_]+(?:\??\.[a-zA-Z0-9_]+)*)/g,
+  (_, key) => {
+    key = key.replace(/\?\./g, ".");
+    const value = getNestedValue(EXTERNAL_VAR.CODE, key);
+    return value ?? 0;
+  }
+);
+
+    // 🔹 Replace context variables (like vat_per)
+    Object.keys(context).forEach(key => {
+      const regex = new RegExp(`\\b${key}\\b`, "g");
+      returnExpr = returnExpr.replace(regex, context[key]);
+    });
+
+      const func = new Function(`return ${returnExpr}`);
+    const finalValue = func();
+
+   steps.push(`return ${returnMatch[1].trim()}`);
+    steps.push(`= ${returnExpr}`);
+    steps.push(`= ${finalValue}`);
   }
   return steps;
 }
