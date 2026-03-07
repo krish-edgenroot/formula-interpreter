@@ -14,7 +14,6 @@
     "Custom Functions",
     "Node.js",
     "JavaScript"
-
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,10 +24,10 @@
   ],
   "scripts": {
     "build": "tsc && node functionParser.js --src=dist",
-    "dev": "node functionParser.js && ts-node app.ts",
+    "dev": "node functionParser.js && ts-node src/index.ts",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "make-pack":"npm pack --pack-destination"
+    "make-pack": "npm pack --pack-destination"
   },
   "repository": {
     "type": "git",

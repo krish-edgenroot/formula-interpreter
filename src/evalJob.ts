@@ -104,35 +104,44 @@ function extractCalculations(expression: string, EXTERNAL_VAR: any) {
   // 3️⃣ Handle return statement
   //   const returnMatch = expression.match(/return\s+(.*);/);
   // 3️⃣ Handle return statement
-  const returnMatch = expression.match(/return\s+([\s\S]+)$/m);
+  const returnMatch = expression.match(/return\s+([\s\S]*?)(?:;|$)/);
+
   if (returnMatch) {
     let returnExpr = returnMatch[1].trim();
+    let displayExpr = returnExpr;
 
-    // remove trailing closing brace if present
-    if (returnExpr.endsWith("}")) {
-      returnExpr = returnExpr.slice(0, -1).trim();
-    }
+    // Replace EXTERNAL_VAR.CODE values
+    displayExpr = displayExpr.replace(
+      /EXTERNAL_VAR\.CODE\??\.([a-zA-Z0-9_]+(?:\??\.[a-zA-Z0-9_]+)*)/g,
+      (_, key) => {
+        key = key.replace(/\?\./g, ".");
+        const value = getNestedValue(EXTERNAL_VAR.CODE, key);
+        return typeof value === "string" ? `"${value}"` : value;
+      }
+    );
 
-      returnExpr = returnExpr.replace(
-  /EXTERNAL_VAR\.CODE\??\.([a-zA-Z0-9_]+(?:\??\.[a-zA-Z0-9_]+)*)/g,
-  (_, key) => {
-    key = key.replace(/\?\./g, ".");
-    const value = getNestedValue(EXTERNAL_VAR.CODE, key);
-    return value ?? 0;
-  }
-);
-
-    // 🔹 Replace context variables (like vat_per)
+    // Replace context variables
     Object.keys(context).forEach(key => {
       const regex = new RegExp(`\\b${key}\\b`, "g");
-      returnExpr = returnExpr.replace(regex, context[key]);
+      const value =
+        typeof context[key] === "string"
+          ? `"${context[key]}"`
+          : context[key];
+
+      displayExpr = displayExpr.replace(regex, value);
     });
 
-      const func = new Function(`return ${returnExpr}`);
-    const finalValue = func();
+    // 🔹 Evaluate safely
+    const func = new Function(
+      "EXTERNAL_VAR",
+      "context",
+      `with(context) { return ${returnExpr}; }`
+    );
 
-   steps.push(`return ${returnMatch[1].trim()}`);
-    steps.push(`= ${returnExpr}`);
+    const finalValue = func(EXTERNAL_VAR, context);
+
+    steps.push(`return ${returnExpr}`);
+    steps.push(`= ${displayExpr}`);
     steps.push(`= ${finalValue}`);
   }
   return steps.join("\n");
