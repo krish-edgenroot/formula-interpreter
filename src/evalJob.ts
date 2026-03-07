@@ -135,7 +135,7 @@ function extractCalculations(expression: string, EXTERNAL_VAR: any) {
     steps.push(`= ${returnExpr}`);
     steps.push(`= ${finalValue}`);
   }
-  return steps;
+  return steps.join("\n");
 }
 
 
